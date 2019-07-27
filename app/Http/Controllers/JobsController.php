@@ -78,6 +78,11 @@ class JobsController extends Controller
 
     public function apply($job_id)
     {
+        if(!Auth::user()->applicant())
+        {
+            Session::flash('error','Invalid Request');
+            return redirect()->route('home');
+        }
         $job=Job::find(decrypt($job_id));
 
         if(Auth::user()->applied($job->id))
