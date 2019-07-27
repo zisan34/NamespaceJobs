@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -35,6 +36,23 @@ class RegisterController extends Controller
      *
      * @return void
      */
+
+    public function selectUserType()
+    {
+        return view('auth.UserType');
+    }
+
+    public function registerForm(Request $request)
+    {
+        $this->validate($request,[
+            'user_type'=>['required',"regex:(company|applicant)"],
+        ]);
+
+        session(['user_type' => $request->user_type]);
+
+        return redirect()->route('register');
+    }
+
     public function __construct()
     {
         $this->middleware('guest');
@@ -49,7 +67,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -64,7 +83,10 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'user_type'=>session('user_type'),
+            'business_name'=>$data['business_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
