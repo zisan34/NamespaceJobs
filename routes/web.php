@@ -14,3 +14,18 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/test', function () {
+	// session()->flush();
+	session()->forget('user_type');
+	return session('user_type');
+});
+
+Auth::routes();
+
+Route::get('selectUserType', 'Auth\RegisterController@selectUserType')->name('selectUserType');
+
+Route::post('userType', 'Auth\RegisterController@registerForm')->name('registerForm');
+
+
+Route::get('/home', 'HomeController@index')->name('home');
