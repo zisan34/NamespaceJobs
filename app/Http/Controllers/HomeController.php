@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Auth;
+
 class HomeController extends Controller
 {
     /**
@@ -23,6 +25,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if(Auth::user()->company())
+        {
+            $jobs=Auth::user()->jobs;
+            return view('home')->with('jobs',$jobs);
+        }
         return view('home');
     }
 }

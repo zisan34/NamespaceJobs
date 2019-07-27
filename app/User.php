@@ -36,4 +36,44 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function applied($job_id)
+    {
+        $job=Job::find($job_id);
+
+        foreach($this->JobApplications as $jobApplication)
+        {
+            if($jobApplication->job==$job)
+                return true;
+        }
+        return false;
+    }
+
+    public function company()
+    {
+        if($this->user_type=='company')
+        {
+            return true;
+        }
+    }
+    public function applicant()
+    {
+        if($this->user_type=='applicant')
+        {
+            return true;
+        }
+    }
+    public function jobs()
+    {
+        return $this->hasMany('App\Job');
+    }
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
+
+    public function jobApplications()
+    {
+        return $this->hasMany('App\JobApplication');
+    }
 }
